@@ -47,7 +47,6 @@ export default {
   .rightheader{
     float: right;
     margin-top: 20px;
-    margin-right: 10px;
   }
   .row{
     height: 100%;

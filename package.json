@@ -14,7 +14,8 @@
     "bootstrap-vue": "^2.17.3",
     "vue": "^2.6.12",
     "vue-axios": "^2.1.5",
-    "vue-router": "^3.4.5"
+    "vue-router": "^3.4.5",
+    "vue-table-dynamic": "^0.3.3"
   },
   "browserslist": [
     "> 1%",

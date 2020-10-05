@@ -20,6 +20,19 @@ export default {
   created() {
     console.log('At this point, this.property is now reactive and propertyComputed will update.')
     this.property = 'Example property updated.'
+  },
+  mounted() {
+    this.$nextTick(() => {
+      window.addEventListener('resize', this.onResize);
+    })
+  },
+  beforeDestroy() { 
+    window.removeEventListener('resize', this.onResize); 
+  },
+   methods: {  
+    onResize() {
+      this.windowHeight = window.innerHeight
+    }
   }
 }
 </script>

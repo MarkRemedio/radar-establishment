@@ -19,7 +19,7 @@
                             placeholder="09xxxxx"
                             class="loginform"
                             type="tel"
-                            pattern="[0]{1}[9]{1}[0-9]{9}"
+                            pattern="[9]{1}[0-9]{9}"
                         ></b-form-input> 
                         <br/><br/>
                         <b-form-input
@@ -78,7 +78,7 @@ export default {
                 console.log("response >> " + response)
             })
             .catch(error => {
-                console.log(error)
+                console.log("error >> " +error)
             })
             .finally(() => this.loading = false)
       },
@@ -100,15 +100,12 @@ export default {
         min-height: 100%;
         max-width: 100%;
         background: url("./../assets/dashboard-blue-logobg.png") 0% 0% no-repeat;
-        background-size: 50%;
+        background-size: 50% 100%;
     }
     .row{
         margin-left: 0px;
         margin-right: 0px;
     }
-    /*.left{
-        background-image: url("./../assets/dashboard-blue-logobg.png");
-    }*/
     .imgleft{
         margin-top: 40%;
     }
