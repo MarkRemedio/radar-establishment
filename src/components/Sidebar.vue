@@ -17,10 +17,6 @@ export default {
       screenheight : window.innerHeight - 70
     }
   },
-  created() {
-    console.log('At this point, this.property is now reactive and propertyComputed will update.')
-    this.property = 'Example property updated.'
-  },
   mounted() {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
@@ -29,10 +25,10 @@ export default {
   beforeDestroy() { 
     window.removeEventListener('resize', this.onResize); 
   },
-   methods: {  
+  methods: {  
     onResize() {
       this.windowHeight = window.innerHeight
-    }
+    },
   }
 }
 </script>
@@ -55,5 +51,8 @@ export default {
   }
   a.router-link-exact-active.router-link-active {
     color: #ffff;
+  }
+  .col-lg-2{
+    padding-left: 0px;
   }
 </style>

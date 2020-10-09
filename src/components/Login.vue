@@ -16,7 +16,7 @@
                             id="contactnumber"
                             v-model="form.contactnumber"
                             required
-                            placeholder="09xxxxx"
+                            placeholder="9xxxxx"
                             class="loginform"
                             type="tel"
                             pattern="[9]{1}[0-9]{9}"
@@ -43,6 +43,7 @@
                                 <p class="forgotpass formtext"> Forgot Password </p> 
                             </div>
                         </div>
+                        <p class="errormsg"> {{ errormsg }}</p>
                         <br/><br/><br/>
                         <b-button type="submit" variant="primary" class="loginbtn">Login</b-button>
                     </b-form>
@@ -56,39 +57,48 @@
 
 <script>
 export default {
-  name: 'app',
-  data () {
-    return {
-      msg: 'Welcome back! Please login to your account.',
-      form : {
-          contactnumber: '',
-          password: '',
-          remember: false,
-          loading: false
-      }
-    }
-  },
-  methods: {
-      onSubmit(event) {
-        event.preventDefault()
-        const loginform = { "contactNumber": this.form.contactnumber , "pin" : this.form.password}
-        this.$http
-            .post(process.env.API_URL +'api/v1/login',loginform)
-            .then(response => {
-                console.log("response >> " + response)
-            })
-            .catch(error => {
-                console.log("error >> " +error)
-            })
-            .finally(() => this.loading = false)
-      },
-      onReset(event) {
-        event.preventDefault();
-        this.form.contactnumber = '';
-        this.form.password = '';
-        this.form.remember = false;
-      }
-    }
+    name: 'app',
+    data () {
+        return {
+        msg: 'Welcome back! Please login to your account.',
+        form : {
+            contactnumber: '',
+            password: '',
+            remember: false,
+            loading: false,
+            errormsg: '',
+            token: localStorage.getItem('access_token') || null,
+        }
+        }
+    },
+    methods: {
+        onSubmit(event) {
+            event.preventDefault()
+            const loginform = { "contactNumber": this.form.contactnumber , "pin" : this.form.password}
+            this.$http
+                .post(process.env.API_URL +'api/v1/login',loginform)
+                .then(response => {
+                    if (response.status === 200) {
+                        const token = response.data.data.token;
+                        localStorage.setItem('access_token', token);
+                        this.$session.start();
+                        this.$session.set('name', response.data.data.user.firstname);
+                        this.$session.set('id', response.data.data.user._id);
+                        this.$router.push({ name : 'establishment' });
+                    }
+                })
+                .catch(error => {
+                    console.log("error >> " +error);
+                })
+                .finally(() => this.loading = false)
+        },
+        onReset(event) {
+            event.preventDefault();
+            this.form.contactnumber = '';
+            this.form.password = '';
+            this.form.remember = false;
+        }
+    },
 }
 </script>
 
@@ -97,10 +107,8 @@ export default {
         height: 100%;
     }
     body {
-        min-height: 100%;
-        max-width: 100%;
         background: url("./../assets/dashboard-blue-logobg.png") 0% 0% no-repeat;
-        background-size: 50% 100%;
+        background-size: 50% auto;
     }
     .row{
         margin-left: 0px;
@@ -152,5 +160,8 @@ export default {
     }
     .check.box.formtext.custom-control.custom-checkbox {
         padding-left: 0px;
+    }
+    .errormsg{
+        display: none;
     }
 </style>

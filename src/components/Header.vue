@@ -11,7 +11,7 @@
             <b-dropdown id="dropdown-right" v-bind:text="name" class="headerdropdown">
               <b-dropdown-item href="#">Personal Details</b-dropdown-item>
               <hr>
-              <b-dropdown-item href="#">Logout</b-dropdown-item>
+              <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-dropdown>
           <img src="./../assets/person-icon.png" class="profile">
         </div>
@@ -26,7 +26,14 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App',
-      name: 'John Doe',
+      name: this.$session.get('name'),
+    }
+  },
+  methods : {   
+    logout() {
+      localStorage.removeItem('access_token');
+      this.$session.destroy();
+      this.$router.push({ name : 'login' });
     }
   }
 }

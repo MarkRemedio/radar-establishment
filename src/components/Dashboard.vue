@@ -47,6 +47,10 @@ export default {
       }
     }
   },
+  created (){
+    /*this.$http
+        .get(process.env.API_URL +'api/v1/login');*/
+  }
 }
 </script>
 

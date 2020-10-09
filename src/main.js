@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
-import VueRouter from 'vue-router'
 import BootstrapVue from 'bootstrap-vue'
+import VueSession from 'vue-session'
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -13,7 +13,29 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
 Vue.use(BootstrapVue)
-Vue.use(VueRouter)
+Vue.use(VueSession)
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('access_token') === null) {
+      next({
+        name: 'login',
+      })
+    } else {
+      next()
+    }
+  } if (to.matched.some(record => record.meta.requiresVisitor)) {
+    if (localStorage.getItem('access_token') !== null) {
+      next({
+        name: 'establishment',
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
 
 new Vue({
   router,

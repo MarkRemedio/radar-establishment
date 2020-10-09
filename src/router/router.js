@@ -9,8 +9,25 @@ Vue.use(Router)
 export default new Router({
     mode: 'history',
     routes: [
-        { path: '/', component: Login },
-        { path: '/establishment', component: Dashboard },
-        { path: '*', component: NotFound },
+        {
+             name: 'login', 
+             path: '/', 
+             component: Login,
+             meta: {
+                 requiresVisitor: true,
+             } 
+        },
+        { 
+            name: 'establishment', 
+            path: '/establishment', 
+            component: Dashboard,
+            meta: {
+                requiresAuth: true,
+            } 
+        },
+        { 
+            path: '*', 
+            component: NotFound 
+        },
     ]
 })
