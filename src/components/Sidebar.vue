@@ -37,6 +37,7 @@ export default {
   .sidebar-container{
       background: #0367B2 0% 0% no-repeat padding-box;
       opacity: 1;
+      background-size: auto auto;
   }
 
   a.nav-link {

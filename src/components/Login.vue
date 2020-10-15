@@ -16,7 +16,7 @@
                             id="contactnumber"
                             v-model="form.contactnumber"
                             required
-                            placeholder="9xxxxx"
+                            placeholder="Number"
                             class="loginform"
                             type="tel"
                             pattern="[9]{1}[0-9]{9}"
@@ -30,7 +30,8 @@
                             class="loginform"
                             type="password"
                         ></b-form-input>
-                        <br/><br/>
+                        <p class="errormsg" v-bind:style="{ display : displayerrormsg }"> {{ errormsg }}</p>
+                        <br/>
                         <div class="row">
                             <div class="col">
                                 <b-form-checkbox 
@@ -43,7 +44,6 @@
                                 <p class="forgotpass formtext"> Forgot Password </p> 
                             </div>
                         </div>
-                        <p class="errormsg"> {{ errormsg }}</p>
                         <br/><br/><br/>
                         <b-button type="submit" variant="primary" class="loginbtn">Login</b-button>
                     </b-form>
@@ -60,15 +60,16 @@ export default {
     name: 'app',
     data () {
         return {
-        msg: 'Welcome back! Please login to your account.',
-        form : {
-            contactnumber: '',
-            password: '',
-            remember: false,
-            loading: false,
-            errormsg: '',
-            token: localStorage.getItem('access_token') || null,
-        }
+            msg: 'Welcome back! Please login to your account.',
+            errormsg: 'Invalid number/password',
+            displayerrormsg: 'none',
+            form : {
+                contactnumber: '',
+                password: '',
+                remember: false,
+                loading: false,
+                token: localStorage.getItem('access_token') || null,
+            }
         }
     },
     methods: {
@@ -88,7 +89,8 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.log("error >> " +error);
+                    this.displayerrormsg = 'block';
+                    this.errormsg = 'Invalid Number/Password';
                 })
                 .finally(() => this.loading = false)
         },
@@ -160,8 +162,10 @@ export default {
     }
     .check.box.formtext.custom-control.custom-checkbox {
         padding-left: 0px;
+        margin-left: -55px;
     }
     .errormsg{
-        display: none;
+        font: normal normal normal 14px/25px Montserrat;
+        color: red;
     }
 </style>
