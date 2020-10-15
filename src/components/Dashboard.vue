@@ -4,10 +4,10 @@
     
     <div class="maincontent">
       <div class="row">
-        <div class="col-lg-2">
+        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
           <SideBar/>
         </div>
-        <div class="col-lg-10">
+        <div class="col-lg-10 col-md-10 col-sm-6 col-xs-6">
           <div class="bodycontainer"> 
               <h2 class="title"> Establishment </h2>
 
@@ -127,5 +127,9 @@ export default {
     padding-left: 40px;
     margin-top: 5px;
   }
+  .pagination-page.flex-c {
+    position: absolute;
+    margin-right: 30%;
+}
 </style>
 

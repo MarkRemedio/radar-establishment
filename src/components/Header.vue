@@ -1,12 +1,12 @@
 <template>
   <div class="header-container">
     <div class="row">
-      <div class="col-lg-2">
+      <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
         <div class="leftheader">
           <img src="./../assets/asdasd.png" class="logoheader">
         </div>
       </div>
-      <div class="col-lg-10">
+      <div class="col-lg-10 col-md-10 col-sm-6 col-xs-6">
         <div class="rightheader">
             <b-dropdown id="dropdown-right" v-bind:text="name" class="headerdropdown">
               <b-dropdown-item href="#">Personal Details</b-dropdown-item>

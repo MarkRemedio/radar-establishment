@@ -30,7 +30,7 @@
                             class="loginform"
                             type="password"
                         ></b-form-input>
-                        <p class="errormsg" v-bind:style="{ display : displayerrormsg }"> {{ errormsg }}</p>
+                        <span class="errormsg" v-bind:style="{ display : displayerrormsg }"> {{ errormsg }}</span>
                         <br/>
                         <div class="row">
                             <div class="col">
@@ -167,5 +167,8 @@ export default {
     .errormsg{
         font: normal normal normal 14px/25px Montserrat;
         color: red;
+        margin-left: -55%;
+        margin-bottom: 0px;
+        margin-top: 10px;
     }
 </style>
