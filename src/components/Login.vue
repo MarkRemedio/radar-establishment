@@ -77,20 +77,22 @@ export default {
             event.preventDefault()
             const loginform = { "contactNumber": this.form.contactnumber , "pin" : this.form.password}
             this.$http
-                .post(process.env.API_URL +'api/v1/login',loginform)
+                .post(process.env.API_URL +'api/auth/login',loginform)
                 .then(response => {
-                    if (response.status === 200) {
-                        const token = response.data.data.token;
-                        localStorage.setItem('access_token', token);
-                        this.$session.start();
-                        this.$session.set('name', response.data.data.user.firstname);
-                        this.$session.set('id', response.data.data.user._id);
-                        this.$router.push({ name : 'establishment' });
-                    }
+                    const token = response.data.data.token;
+                    localStorage.setItem('access_token', token);
+                    this.$session.start();
+                    this.$session.set('name', response.data.data.user.firstName);
+                    this.$session.set('id', response.data.data.user._id);
+                    this.$session.set('profileurl', response.data.data.user.profileImageFileId);
+                    this.$router.push({ name : 'establishment' });
                 })
                 .catch(error => {
                     this.displayerrormsg = 'block';
                     this.errormsg = 'Invalid Number/Password';
+                    this.form.contactnumber = '';
+                    this.form.password = '';
+                    console.log(error);
                 })
                 .finally(() => this.loading = false)
         },

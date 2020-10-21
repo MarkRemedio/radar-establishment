@@ -13,7 +13,7 @@
               <hr>
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-dropdown>
-          <img src="./../assets/person-icon.png" class="profile">
+          <img :src="profileimg" id="profileimg" class="profileimg" alt="profile image">
         </div>
       </div>
     </div>
@@ -21,12 +21,14 @@
 </template>
 
 <script>
+import defaultProfileImg from './../assets/person-icon.png'
+
 export default {
   name: 'app',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App',
       name: this.$session.get('name'),
+      profileimg: defaultProfileImg,
     }
   },
   methods : {   
@@ -35,6 +37,9 @@ export default {
       this.$session.destroy();
       this.$router.push({ name : 'login' });
     }
+  },
+  created (){
+    this.profileimg = process.env.API_URL +'api/files/' + this.$session.get('profileurl');
   }
 }
 </script>
@@ -64,7 +69,7 @@ export default {
     margin-left: 22px;
     margin-top: 15px;
   }
-  .profile{
+  .profileimg{
     border-radius: 50px;
     opacity: 1;
     width: 38px;

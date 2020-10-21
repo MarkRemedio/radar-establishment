@@ -1,21 +1,12 @@
 <template>
   <div>
     <Header/>
-    
     <div class="maincontent">
-      <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-4">
-          <SideBar/>
-        </div>
-        <div class="col-lg-10 col-md-10 col-sm-6 col-xs-6">
-          <div class="bodycontainer"> 
-              <h2 class="title"> Establishment </h2>
-
-              <div class="datatable">
-                <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
-              </div>
+      <div class="bodycontainer"> 
+          <h2 class="title"> Establishment Logs </h2>
+          <div class="datatable">
+            <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -37,7 +28,7 @@ export default {
     return {
       params: {
         data: [
-          ['ESTABLISHMENT', 'ADDRESS', 'CONTACT NO.', 'ACTIONS']
+          ['Name', 'In/Out', 'Time Logged']
         ],
         header: 'row',
         highlight: { row: [0] },
@@ -45,17 +36,38 @@ export default {
         enableSearch: true,
         pagination: true,
         pageSize: 5,
-        pageSizes: [5, 10, 20]
-      }
+        pageSizes: [5, 10, 20],
+        columnWidth: [{column: 0, width: '30%'}, {column: 1, width: '20%'}, {column: 2, width: '50%'}],
+      },
     }
   },
   created (){
     const random = () => {
       return parseInt(Date.now() + Math.random() * 10000000).toString(16).slice(-6)
     }
-    for (let i = 0; i < 40; i++) {
+    /*for (let i = 0; i < 40; i++) {
       this.params.data.push([i+1, `${random()}`, `${random()}`, `${random()}`])
-    }
+    }*/
+
+    this.$http.get(process.env.API_URL +'api/access-logs?establishmentId=5f86a0682d3d1553940e6f3c', { 
+        headers : { 
+          'Authorization': `Bearer `+ localStorage.getItem('access_token')
+        } 
+      })
+      .then(response => {
+          if (response.status === 200) {
+            response.data.data.forEach((logs) => {
+              var logTime = Date.parse(logs.createdAt);
+              var logUser = logs.individualId;
+              var type = logs.accessType.toUpperCase();
+              
+              this.params.data.push([logUser, type, new Date(logTime)]);
+            });
+          }
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
 }
 </script>
@@ -66,16 +78,14 @@ export default {
     letter-spacing: 0px;
     color: #303030;
     opacity: 1;
+    padding-left: 15px;
+    padding-top: 20px;
   }
   .bodycontainer{
-    margin-top: 20px;
     margin-left: 20px;
     margin-right: 20px;
   }
-  .row {
-    margin-right: 0px;
-  }
-  .maincontent .row {
+  .maincontent {
     background: #F0F3F7 0% 0% no-repeat padding-box;
   }
   .datatable {
@@ -114,9 +124,9 @@ export default {
     opacity: 1;
   }
   .table-cell.flex-c-s,
-  span.table-cell-inner.flex-c-s
+  .table-cell.flex-c
   {
-    margin-left: 15px;
+    padding-left: 20px;
   }
   i.iconfont.iconsearch {
     width: 35px;
@@ -130,6 +140,6 @@ export default {
   .pagination-page.flex-c {
     position: absolute;
     margin-right: 30%;
-}
+  }
 </style>
 
