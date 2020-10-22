@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <Header/>
-    <div class="maincontent">
+    <div class="maincontent h-100">
+      <Header/>
       <div class="bodycontainer"> 
           <h2 class="title"> Establishment Logs </h2>
           <div class="datatable">
@@ -9,7 +8,6 @@
           </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -140,6 +138,9 @@ export default {
   .pagination-page.flex-c {
     position: absolute;
     margin-right: 30%;
+  }
+  .row {
+    margin-right: 0px;
   }
 </style>
 

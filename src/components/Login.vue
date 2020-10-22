@@ -1,12 +1,12 @@
 <template>
-    <div class="login-container">
-        <div class="row">
-            <div class="col left">
+    <div class="login-container h-100">
+        <div class="row h-100">
+            <div class="col left h-100">
                 <center>
                     <img src="./../assets/asdasd.png" class="imgleft">
                 </center>
             </div>
-            <div class="col">
+            <div class="col h-100" id="logindiv">
                 <center>
                     <img src="./../assets/radarblack.png" class="imgright">
                     <p class="msg"> {{ msg }} </p> 
@@ -107,12 +107,9 @@ export default {
 </script>
 
 <style>
-    html {
-        height: 100%;
-    }
     body {
         background: url("./../assets/dashboard-blue-logobg.png") 0% 0% no-repeat;
-        background-size: 50% auto;
+        background-size: 50% 100%;
     }
     .row{
         margin-left: 0px;
@@ -172,5 +169,14 @@ export default {
         margin-left: -55%;
         margin-bottom: 0px;
         margin-top: 10px;
+    }
+    @media only screen 
+    and (max-device-width: 1024px) {
+        div#logindiv {
+            margin-top: 30%;
+        }
+        .imgleft {
+            margin-top: 120%;
+        }
     }
 </style>
