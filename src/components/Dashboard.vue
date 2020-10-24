@@ -3,9 +3,11 @@
       <Header/>
       <div class="bodycontainer"> 
           <h2 class="title"> Establishment Logs </h2>
-          <div class="datatable">
-            <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
-          </div>
+          <center>
+            <div class="datatable">
+              <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
+            </div>
+          </center>
       </div>
     </div>
 </template>
@@ -32,40 +34,62 @@ export default {
         highlight: { row: [0] },
         highlightedColor: '#F5F6FA',
         enableSearch: true,
-        pagination: true,
         pageSize: 5,
         pageSizes: [5, 10, 20],
+        pagination: true,
         columnWidth: [{column: 0, width: '30%'}, {column: 1, width: '20%'}, {column: 2, width: '50%'}],
       },
     }
   },
-  created (){
-    const random = () => {
-      return parseInt(Date.now() + Math.random() * 10000000).toString(16).slice(-6)
-    }
-    /*for (let i = 0; i < 40; i++) {
-      this.params.data.push([i+1, `${random()}`, `${random()}`, `${random()}`])
-    }*/
+  methods : {   
+    filltable: function () {
+      Promise.all([
+          this.fetchAllIndividuals(),
+          this.fetchAllAccessLogs(),
+        ])
+        .then((values) => {
+          let individuals = values[0];
+          values[1].forEach((logs) => {
+            var logTime = Date.parse(logs.createdAt);
+            var type = logs.accessType.toUpperCase();
+            this.params.data.push([values[0].get(logs.individualId).join(" "), type, new Date(logTime)]);
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
 
-    this.$http.get(process.env.API_URL +'api/access-logs?establishmentId=5f86a0682d3d1553940e6f3c', { 
+    fetchAllAccessLogs : function () {
+      //this.$session.get('id') 
+      //5f86a0682d3d1553940e6f3c
+      return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , { 
+        headers : { 
+          'Authorization': `Bearer `+ localStorage.getItem('access_token')
+        } 
+      })
+      .then(response => response.data.data);
+    },
+
+    fetchAllIndividuals : function (){
+      var namesiddata = new Map();
+      this.$http.get(process.env.API_URL +'api/users?role=individual', { 
         headers : { 
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
         } 
       })
       .then(response => {
-          if (response.status === 200) {
-            response.data.data.forEach((logs) => {
-              var logTime = Date.parse(logs.createdAt);
-              var logUser = logs.individualId;
-              var type = logs.accessType.toUpperCase();
-              
-              this.params.data.push([logUser, type, new Date(logTime)]);
-            });
-          }
-      })
-      .catch(error => {
-        console.log(error)
-      })
+        response.data.data.forEach((user) => {
+          namesiddata.set(user._id,[user.firstName,user.middleName,user.lastName]);
+        });
+      });
+
+      return namesiddata;
+    },
+
+  },
+  mounted (){
+    this.filltable();
   }
 }
 </script>
@@ -136,8 +160,7 @@ export default {
     margin-top: 5px;
   }
   .pagination-page.flex-c {
-    position: absolute;
-    margin-right: 30%;
+    margin:auto;
   }
   .row {
     margin-right: 0px;

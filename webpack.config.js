@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        API_URL: '"http://54.255.29.76:3000/"'
+        API_URL: '"https://radar-api-backend.herokuapp.com/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({

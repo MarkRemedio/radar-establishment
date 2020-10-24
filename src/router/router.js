@@ -13,9 +13,6 @@ export default new Router({
              name: 'login', 
              path: '/', 
              component: Login,
-             meta: {
-                 requiresVisitor: true,
-             } 
         },
         { 
             name: 'establishment', 

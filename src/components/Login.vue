@@ -31,8 +31,7 @@
                             type="password"
                         ></b-form-input>
                         <span class="errormsg" v-bind:style="{ display : displayerrormsg }"> {{ errormsg }}</span>
-                        <br/>
-                        <div class="row">
+                        <!--div class="row">
                             <div class="col">
                                 <b-form-checkbox 
                                         value="true"
@@ -43,12 +42,12 @@
                             <div class="col">
                                 <p class="forgotpass formtext"> Forgot Password </p> 
                             </div>
-                        </div>
-                        <br/><br/><br/>
+                        </div-->
+                        <br><br/><br/>
                         <b-button type="submit" variant="primary" class="loginbtn">Login</b-button>
                     </b-form>
-                    <br/><br/><br/>
-                    <a href="#" class="createaccount">Not Registered? Create an Account!</a>
+                    <!--br/><br/><br/>
+                    <a href="#" class="createaccount">Not Registered? Create an Account!</a-->
                 </center>
             </div>
         </div>
@@ -79,20 +78,26 @@ export default {
             this.$http
                 .post(process.env.API_URL +'api/auth/login',loginform)
                 .then(response => {
-                    const token = response.data.data.token;
-                    localStorage.setItem('access_token', token);
-                    this.$session.start();
-                    this.$session.set('name', response.data.data.user.firstName);
-                    this.$session.set('id', response.data.data.user._id);
-                    this.$session.set('profileurl', response.data.data.user.profileImageFileId);
-                    this.$router.push({ name : 'establishment' });
+                    if(response.data.data.user.role === 'establishment'){
+                        const token = response.data.data.token;
+                        localStorage.setItem('access_token', token);
+                        this.$session.start();
+                        this.$session.set('name', response.data.data.user.firstName);
+                        this.$session.set('id', response.data.data.user._id);
+                        this.$session.set('profileurl', response.data.data.user.profileImageFileId);
+                        this.$router.push({ name : 'establishment' });
+                    }else{
+                        this.displayerrormsg = 'block';
+                        this.errormsg = 'Unauthorized';
+                        this.form.contactnumber = '';
+                        this.form.password = '';
+                    }
                 })
                 .catch(error => {
                     this.displayerrormsg = 'block';
                     this.errormsg = 'Invalid Number/Password';
                     this.form.contactnumber = '';
                     this.form.password = '';
-                    console.log(error);
                 })
                 .finally(() => this.loading = false)
         },
@@ -164,10 +169,9 @@ export default {
         margin-left: -55px;
     }
     .errormsg{
-        font: normal normal normal 14px/25px Montserrat;
+        font: normal normal normal 18px/25px Montserrat;
         color: red;
-        margin-left: -55%;
-        margin-bottom: 0px;
+        text-align: left;
         margin-top: 10px;
     }
     @media only screen 

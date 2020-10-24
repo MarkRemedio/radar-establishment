@@ -24,14 +24,6 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
-  } if (to.matched.some(record => record.meta.requiresVisitor)) {
-    if (localStorage.getItem('access_token') !== null) {
-      next({
-        name: 'establishment',
-      })
-    } else {
-      next()
-    }
   } else {
     next()
   }

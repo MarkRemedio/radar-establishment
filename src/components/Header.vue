@@ -9,8 +9,8 @@
       <div class="col-lg-10 col-md-10 col-sm-6 col-xs-6">
         <div class="rightheader">
             <b-dropdown id="dropdown-right" v-bind:text="name" class="headerdropdown">
-              <b-dropdown-item href="#">Personal Details</b-dropdown-item>
-              <hr>
+              <!--b-dropdown-item href="#">Personal Details</b-dropdown-item>
+              <hr-->
               <b-dropdown-item v-on:click="logout">Logout</b-dropdown-item>
             </b-dropdown>
           <img :src="profileimg" id="profileimg" class="profileimg" alt="profile image">
@@ -105,5 +105,8 @@ export default {
   }
   button#dropdown-center__BV_toggle_ {
     padding: 2px;
+  }
+  .col-lg-2.col-md-2.col-sm-4.col-xs-4 {
+    padding-left: 0px;
   }
 </style>
