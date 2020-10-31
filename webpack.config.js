@@ -74,7 +74,28 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        API_URL: '"https://radar-api-backend.herokuapp.com/"'
+        API_URL: '"https://api.radarph.online/"'
+      }
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    }),
+    new webpack.LoaderOptionsPlugin({
+      minimize: true
+    })
+  ])
+}
+
+if (process.env.NODE_ENV === 'staging') {
+  module.exports.devtool = '#source-map'
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"staging"',
+        API_URL: '"http://api-staging.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -94,8 +115,8 @@ if (process.env.NODE_ENV === 'development') {
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: '"production"',
-        API_URL: '"https://radar-api-backend.herokuapp.com/"'
+        NODE_ENV: '"development"',
+        API_URL: '"http://api-staging.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({

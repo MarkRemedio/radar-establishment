@@ -31,10 +31,7 @@ export default {
   }
   @media only screen 
     and (max-device-width: 1024px) {
-        html {
-          height: 100%;
-        }
-        body{
+        body, html{
           height: 100%;
         }
   }

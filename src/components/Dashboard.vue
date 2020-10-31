@@ -28,7 +28,7 @@ export default {
     return {
       params: {
         data: [
-          ['Name', 'In/Out', 'Time Logged']
+          ['ID', 'Name', 'Address', 'In/Out', 'Time Logged']
         ],
         header: 'row',
         highlight: { row: [0] },
@@ -37,7 +37,13 @@ export default {
         pageSize: 5,
         pageSizes: [5, 10, 20],
         pagination: true,
-        columnWidth: [{column: 0, width: '30%'}, {column: 1, width: '20%'}, {column: 2, width: '50%'}],
+        columnWidth: [
+          {column: 0, width: '20%'}, 
+          {column: 1, width: '20%'}, 
+          {column: 2, width: '25%'}, 
+          {column: 3, width: '10%'}, 
+          {column: 4, width: '25%'}
+        ],
       },
     }
   },
@@ -50,9 +56,21 @@ export default {
         .then((values) => {
           let individuals = values[0];
           values[1].forEach((logs) => {
-            var logTime = Date.parse(logs.createdAt);
-            var type = logs.accessType.toUpperCase();
-            this.params.data.push([values[0].get(logs.individualId).join(" "), type, new Date(logTime)]);
+            let logTime = new Date(Date.parse(logs.createdAt)).toString();
+            let idx = logTime.indexOf("GMT");
+            let userDetails = values[0].get(logs.individualId);
+            let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
+            let userId = userDetails[3];
+            let userAddress = userDetails[4];
+
+            logTime = logTime.slice(0, idx-1);
+            this.params.data.push([
+              userId,
+              userNameArray.join(" "), 
+              userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
+              logs.accessType.toUpperCase(), 
+              logTime
+            ]);
           })
         })
         .catch(error => {
@@ -72,7 +90,7 @@ export default {
     },
 
     fetchAllIndividuals : function (){
-      var namesiddata = new Map();
+      let namesiddata = new Map();
       this.$http.get(process.env.API_URL +'api/users?role=individual', { 
         headers : { 
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
@@ -80,7 +98,13 @@ export default {
       })
       .then(response => {
         response.data.data.forEach((user) => {
-          namesiddata.set(user._id,[user.firstName,user.middleName,user.lastName]);
+          namesiddata.set(user._id,[
+              user.firstName,
+              user.middleName,
+              user.lastName,
+              user._id,
+              user.address
+            ]);
         });
       });
 
@@ -133,17 +157,15 @@ export default {
     letter-spacing: 0px;
     color: #727C90;
     text-transform: uppercase;
-    opacity: 0.6;
+    opacity: 0.8;
   }
   .v-table-row.flex-c {
     height: 65px !important;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    opacity: 1;
     text-align: left;
-    font: normal normal normal 13px/20px Montserrat;
     letter-spacing: 0px;
-    color: #303030;
-    opacity: 1;
+    font-size: 14px;
+    font: Montserrat;
   }
   .table-cell.flex-c-s,
   .table-cell.flex-c

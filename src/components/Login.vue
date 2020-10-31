@@ -1,12 +1,12 @@
 <template>
     <div class="login-container h-100">
         <div class="row h-100">
-            <div class="col left h-100">
+            <div class="col col-xs-6 col-sm-6 col-md-6 left h-100">
                 <center>
                     <img src="./../assets/asdasd.png" class="imgleft">
                 </center>
             </div>
-            <div class="col h-100" id="logindiv">
+            <div class="col col-xs-6 col-sm-6 col-md-6 h-100" id="logindiv">
                 <center>
                     <img src="./../assets/radarblack.png" class="imgright">
                     <p class="msg"> {{ msg }} </p> 
@@ -181,6 +181,9 @@ export default {
         }
         .imgleft {
             margin-top: 120%;
+        }
+        body, html{
+          overflow-y: hidden;
         }
     }
 </style>
