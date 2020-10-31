@@ -109,4 +109,7 @@ export default {
   .col-lg-2.col-md-2.col-sm-4.col-xs-4 {
     padding-left: 0px;
   }
+  ul.dropdown-menu.show {
+    width: 100%;
+  }
 </style>
