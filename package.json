@@ -1,0 +1,45 @@
+{
+  "name": "radar-frontend",
+  "description": "Radar Front End for Establishments",
+  "version": "1.0.0",
+  "author": "Mark Remedio <josephremedio@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "staging": "cross-env NODE_ENV=staging webpack --progress --hide-modules",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "axios": "^0.20.0",
+    "bootstrap-vue": "^2.17.3",
+    "vue": "^2.6.12",
+    "vue-axios": "^2.1.5",
+    "vue-router": "^3.4.5",
+    "vue-session": "^1.0.0",
+    "vue-table-dynamic": "^0.3.3"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-3": "^6.24.1",
+    "bootstrap": "^4.5.2",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.4",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "vue-loader": "^13.0.5",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.12.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
