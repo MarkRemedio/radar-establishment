@@ -39,11 +39,11 @@ export default {
         pagination: true,
         columnWidth: [
           {column: 0, width: '15%'}, 
-          {column: 1, width: '15%'}, 
+          {column: 1, width: '18%'}, 
           {column: 2, width: '30%'}, 
           {column: 3, width: '10%'}, 
           {column: 4, width: '15%'},
-          {column: 5, width: '15%'},
+          {column: 5, width: '12%'},
         ],
       },
     }
@@ -105,7 +105,7 @@ export default {
               user.firstName,
               user.middleName,
               user.lastName,
-              user._id,
+              user.displayId,
               user.address
             ]);
         });
