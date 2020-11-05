@@ -28,7 +28,7 @@ export default {
     return {
       params: {
         data: [
-          ['ID', 'Name', 'Address', 'In/Out', 'Time Logged']
+          ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
         ],
         header: 'row',
         highlight: { row: [0] },
@@ -38,11 +38,12 @@ export default {
         pageSizes: [5, 10, 20],
         pagination: true,
         columnWidth: [
-          {column: 0, width: '20%'}, 
-          {column: 1, width: '20%'}, 
-          {column: 2, width: '25%'}, 
+          {column: 0, width: '15%'}, 
+          {column: 1, width: '18%'}, 
+          {column: 2, width: '30%'}, 
           {column: 3, width: '10%'}, 
-          {column: 4, width: '25%'}
+          {column: 4, width: '15%'},
+          {column: 5, width: '12%'},
         ],
       },
     }
@@ -54,23 +55,27 @@ export default {
           this.fetchAllAccessLogs(),
         ])
         .then((values) => {
+          console.log(values[0]);
           let individuals = values[0];
           values[1].forEach((logs) => {
-            let logTime = new Date(Date.parse(logs.createdAt)).toString();
-            let idx = logTime.indexOf("GMT");
             let userDetails = values[0].get(logs.individualId);
-            let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
-            let userId = userDetails[3];
-            let userAddress = userDetails[4];
+            if(userDetails != null){
+              let logTime = logs.createdAt.toString().replace("T", " ");
+              let idx = logTime.indexOf("Z");
+              let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
+              let userId = userDetails[3];
+              let userAddress = userDetails[4];
 
-            logTime = logTime.slice(0, idx-1);
-            this.params.data.push([
-              userId,
-              userNameArray.join(" "), 
-              userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
-              logs.accessType.toUpperCase(), 
-              logTime
-            ]);
+              logTime = logTime.slice(0, idx-1);
+              this.params.data.push([
+                userId,
+                userNameArray.join(" "), 
+                userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
+                logs.accessType.toUpperCase(), 
+                logs.designatedArea,
+                logTime
+              ]);
+            }
           })
         })
         .catch(error => {
@@ -79,8 +84,6 @@ export default {
     },
 
     fetchAllAccessLogs : function () {
-      //this.$session.get('id') 
-      //5f86a0682d3d1553940e6f3c
       return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , { 
         headers : { 
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
@@ -102,7 +105,7 @@ export default {
               user.firstName,
               user.middleName,
               user.lastName,
-              user._id,
+              user.displayId,
               user.address
             ]);
         });
