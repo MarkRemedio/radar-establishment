@@ -40,10 +40,10 @@ export default {
         columnWidth: [
           {column: 0, width: '15%'}, 
           {column: 1, width: '18%'}, 
-          {column: 2, width: '30%'}, 
+          {column: 2, width: '27%'}, 
           {column: 3, width: '10%'}, 
           {column: 4, width: '15%'},
-          {column: 5, width: '12%'},
+          {column: 5, width: '15%'},
         ],
       },
     }
@@ -60,8 +60,8 @@ export default {
           values[1].forEach((logs) => {
             let userDetails = values[0].get(logs.individualId);
             if(userDetails != null){
-              let logTime = logs.createdAt.toString().replace("T", " ");
-              let idx = logTime.indexOf("Z");
+              let logTime = new Date(logs.createdAt).toString();
+              let idx = logTime.indexOf("GMT");
               let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
               let userId = userDetails[3];
               let userAddress = userDetails[4];
