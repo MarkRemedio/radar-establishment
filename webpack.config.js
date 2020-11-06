@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        API_URL: '"https://api.radarph.online/"'
+        API_URL: '"http://api.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({

@@ -38,9 +38,9 @@ export default {
         pageSizes: [5, 10, 20],
         pagination: true,
         columnWidth: [
-          {column: 0, width: '15%'}, 
+          {column: 0, width: '7%'}, 
           {column: 1, width: '18%'}, 
-          {column: 2, width: '27%'}, 
+          {column: 2, width: '35%'}, 
           {column: 3, width: '10%'}, 
           {column: 4, width: '15%'},
           {column: 5, width: '15%'},
