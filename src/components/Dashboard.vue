@@ -5,6 +5,13 @@
           <h2 class="title"> Establishment Logs </h2>
           <center>
             <div class="datatable">
+              <date-picker 
+                v-model="daterange" 
+                type="date" 
+                range 
+                placeholder="Select date range" 
+                format="YYYY-MM-DD"
+                width="200"></date-picker>
               <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
             </div>
           </center>
@@ -16,16 +23,20 @@
 import Header from './Header.vue'
 import SideBar from './Sidebar.vue'
 import VueTableDynamic from 'vue-table-dynamic'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 export default {
   name: 'app',
   components: {
     Header,
     SideBar,
-    VueTableDynamic 
+    VueTableDynamic,
+    DatePicker,
   },
   data(){
     return {
+      daterange: '',
       params: {
         data: [
           ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
@@ -48,6 +59,11 @@ export default {
       },
     }
   },
+  watch: {
+    daterange : function (){
+      console.log(this.daterange[0]);
+    }
+  },
   methods : {   
     filltable: function () {
       Promise.all([
@@ -61,6 +77,7 @@ export default {
             let userDetails = values[0].get(logs.individualId);
             if(userDetails != null){
               let logTime = new Date(logs.createdAt).toString();
+              console.log("time : " + logTime);
               let idx = logTime.indexOf("GMT");
               let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
               let userId = userDetails[3];
@@ -189,6 +206,19 @@ export default {
   }
   .row {
     margin-right: 0px;
+  }
+  .mx-datepicker-range {
+    width: 220px;
+    float: right;
+    position: relative;
+    margin-bottom: -30%;
+    margin-top: 10px;
+  }
+  input.mx-input {
+    height: 45px;
+    box-shadow: 0 0 10px #0000002B;
+    border-radius: 20px;
+    opacity: 1;
   }
 </style>
 
