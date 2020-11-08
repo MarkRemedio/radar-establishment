@@ -5,6 +5,13 @@
           <h2 class="title"> Establishment Logs </h2>
           <center>
             <div class="datatable">
+              <date-picker 
+                v-model="daterange" 
+                type="date" 
+                range 
+                placeholder="Select date range" 
+                format="YYYY-MM-DD"
+                width="200"></date-picker>
               <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
             </div>
           </center>
@@ -16,16 +23,21 @@
 import Header from './Header.vue'
 import SideBar from './Sidebar.vue'
 import VueTableDynamic from 'vue-table-dynamic'
+import DatePicker from 'vue2-datepicker';
+import 'vue2-datepicker/index.css';
 
 export default {
   name: 'app',
   components: {
     Header,
     SideBar,
-    VueTableDynamic 
+    VueTableDynamic,
+    DatePicker,
   },
   data(){
     return {
+      daterange: '',
+      localIndividual: null,
       params: {
         data: [
           ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
@@ -48,6 +60,32 @@ export default {
       },
     }
   },
+  watch: {
+    daterange : function (){
+      Promise.all([
+          this.fetchAllAccessLogs(),
+        ])
+        .then((values) => {
+          this.params.data = [['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']];
+          values[0].forEach((logs) => {
+            let userDetails = this.localIndividual.get(logs.individualId);
+            if(userDetails != null){
+              let logTime = new Date(logs.createdAt);
+              let fromDate = new Date(this.daterange[0]);
+              let toDate = new Date(this.daterange[1]);
+
+              if(fromDate.getTime() <= logTime.getTime() && toDate.getTime() >= logTime.getTime()){
+                console.log("time " + logTime + " is within range");
+                this.addDatatoTable(userDetails, logs, logTime);
+              }
+            }
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  },
   methods : {   
     filltable: function () {
       Promise.all([
@@ -56,25 +94,13 @@ export default {
         ])
         .then((values) => {
           console.log(values[0]);
-          let individuals = values[0];
+          this.localIndividual = values[0];
           values[1].forEach((logs) => {
-            let userDetails = values[0].get(logs.individualId);
+            let userDetails = this.localIndividual.get(logs.individualId);
             if(userDetails != null){
-              let logTime = new Date(logs.createdAt).toString();
-              let idx = logTime.indexOf("GMT");
-              let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
-              let userId = userDetails[3];
-              let userAddress = userDetails[4];
-
-              logTime = logTime.slice(0, idx-1);
-              this.params.data.push([
-                userId,
-                userNameArray.join(" "), 
-                userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
-                logs.accessType.toUpperCase(), 
-                logs.designatedArea,
-                logTime
-              ]);
+              let logTime = new Date(logs.createdAt);
+              
+              this.addDatatoTable(userDetails, logs, logTime);
             }
           })
         })
@@ -113,6 +139,24 @@ export default {
 
       return namesiddata;
     },
+
+    addDatatoTable : function(userDetails, logs, logTime){
+      logTime = logTime.toString();
+      let idx = logTime.indexOf("GMT");
+      let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
+      let userId = userDetails[3];
+      let userAddress = userDetails[4];
+
+      logTime = logTime.slice(0, idx-1);
+      this.params.data.push([
+        userId,
+        userNameArray.join(" "), 
+        userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
+        logs.accessType.toUpperCase(), 
+        logs.designatedArea,
+        logTime
+      ]);
+    }
 
   },
   mounted (){
@@ -189,6 +233,19 @@ export default {
   }
   .row {
     margin-right: 0px;
+  }
+  .mx-datepicker-range {
+    width: 220px;
+    float: right;
+    position: relative;
+    margin-bottom: -30%;
+    margin-top: 10px;
+  }
+  input.mx-input {
+    height: 45px;
+    box-shadow: 0 0 10px #0000002B;
+    border-radius: 20px;
+    opacity: 1;
   }
 </style>
 
