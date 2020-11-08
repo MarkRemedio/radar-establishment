@@ -74,7 +74,7 @@ if (process.env.NODE_ENV === 'production') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"production"',
-        API_URL: '"http://api.radarph.online/"'
+        API_URL: '"https://api.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -95,7 +95,7 @@ if (process.env.NODE_ENV === 'staging') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"staging"',
-        API_URL: '"http://api-staging.radarph.online/"'
+        API_URL: '"https://api-staging.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
@@ -116,7 +116,7 @@ if (process.env.NODE_ENV === 'development') {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: '"development"',
-        API_URL: '"http://api-staging.radarph.online/"'
+        API_URL: '"https://api-staging.radarph.online/"'
       }
     }),
     new webpack.optimize.UglifyJsPlugin({
