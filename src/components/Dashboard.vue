@@ -37,6 +37,7 @@ export default {
   data(){
     return {
       daterange: '',
+      localIndividual: null,
       params: {
         data: [
           ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
@@ -61,7 +62,32 @@ export default {
   },
   watch: {
     daterange : function (){
-      console.log(this.daterange[0]);
+      console.log(new Date(this.daterange[0]));
+      console.log(new Date(this.daterange[1]));
+      Promise.all([
+          this.fetchAllIndividuals(),
+          this.fetchAllAccessLogs(),
+        ])
+        .then((values) => {
+          console.log(values[0]);
+          this.localIndividual = values[0];
+          values[1].forEach((logs) => {
+            let userDetails = this.localIndividual.get(logs.individualId);
+            if(userDetails != null){
+              let logTime = new Date(logs.createdAt);
+              console.log("time : " + logTime);
+              let fromDate = new Date(this.daterange[0]);
+              let toDate = new Date(this.daterange[1]);
+
+              if(fromDate.getTime() <= logTime.getTime() && toDate.getTime() >= logTime.getTime()){
+                this.addDatatoTable(userDetails, logs, logTime);
+              }
+            }
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   methods : {   
@@ -72,26 +98,14 @@ export default {
         ])
         .then((values) => {
           console.log(values[0]);
-          let individuals = values[0];
+          this.localIndividual = values[0];
           values[1].forEach((logs) => {
-            let userDetails = values[0].get(logs.individualId);
+            let userDetails = this.localIndividual.get(logs.individualId);
             if(userDetails != null){
               let logTime = new Date(logs.createdAt).toString();
               console.log("time : " + logTime);
-              let idx = logTime.indexOf("GMT");
-              let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
-              let userId = userDetails[3];
-              let userAddress = userDetails[4];
-
-              logTime = logTime.slice(0, idx-1);
-              this.params.data.push([
-                userId,
-                userNameArray.join(" "), 
-                userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
-                logs.accessType.toUpperCase(), 
-                logs.designatedArea,
-                logTime
-              ]);
+              
+              this.addDatatoTable(userDetails, logs, logTime);
             }
           })
         })
@@ -130,6 +144,23 @@ export default {
 
       return namesiddata;
     },
+
+    addDatatoTable : function(userDetails, logs, logTime){
+      let idx = logTime.toString().indexOf("GMT");
+      let userNameArray = [userDetails[0],userDetails[1],userDetails[2]];
+      let userId = userDetails[3];
+      let userAddress = userDetails[4];
+
+      logTime = logTime.slice(0, idx-1);
+      this.params.data.push([
+        userId,
+        userNameArray.join(" "), 
+        userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
+        logs.accessType.toUpperCase(), 
+        logs.designatedArea,
+        logTime
+      ]);
+    }
 
   },
   mounted (){
