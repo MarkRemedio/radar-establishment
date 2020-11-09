@@ -85,6 +85,7 @@ export default {
                         this.$session.set('name', response.data.data.user.firstName);
                         this.$session.set('id', response.data.data.user._id);
                         this.$session.set('profileurl', response.data.data.user.profileImageFileId);
+                        this.$session.set('email', response.data.data.user.email);
                         this.$router.push({ name : 'establishment' });
                     }else{
                         this.displayerrormsg = 'block';
