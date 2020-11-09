@@ -37,7 +37,8 @@ export default {
   data(){
     return {
       daterange: '',
-      localIndividual: null,
+      localIndividual: [],
+      establishmentIds: [],
       params: {
         data: [
           ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
@@ -69,7 +70,7 @@ export default {
           this.params.data = [['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']];
           values[0].forEach((logs) => {
             let userDetails = this.localIndividual.get(logs.individualId);
-            if(userDetails != null){
+            if(userDetails != null && this.establishmentIds.includes(logs.establishmentId)){
               let logTime = new Date(logs.createdAt);
               let fromDate = new Date(this.daterange[0]);
               let toDate = new Date(this.daterange[1]);
@@ -87,28 +88,6 @@ export default {
     }
   },
   methods : {   
-    filltable: function () {
-      Promise.all([
-          this.fetchAllIndividuals(),
-          this.fetchAllAccessLogs(),
-        ])
-        .then((values) => {
-          console.log(values[0]);
-          this.localIndividual = values[0];
-          values[1].forEach((logs) => {
-            let userDetails = this.localIndividual.get(logs.individualId);
-            if(userDetails != null){
-              let logTime = new Date(logs.createdAt);
-              
-              this.addDatatoTable(userDetails, logs, logTime);
-            }
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-
     fetchAllAccessLogs : function () {
       return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , { 
         headers : { 
@@ -140,6 +119,22 @@ export default {
       return namesiddata;
     },
 
+    fetchAllEstablishment : function (){
+      let establishmentId = [];
+      this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+this.$session.get('email'), { 
+        headers : { 
+          'Authorization': `Bearer `+ localStorage.getItem('access_token')
+        } 
+      })
+      .then(response => {
+        response.data.data.forEach((user) => {
+          establishmentId.push(user._id);
+        });
+      });
+
+      return establishmentId;
+    },
+
     addDatatoTable : function(userDetails, logs, logTime){
       logTime = logTime.toString();
       let idx = logTime.indexOf("GMT");
@@ -160,12 +155,36 @@ export default {
 
   },
   mounted (){
-    this.filltable();
+    Promise.all([
+          this.fetchAllIndividuals(),
+          this.fetchAllAccessLogs(),
+          this.fetchAllEstablishment(),
+        ])
+        .then((values) => {
+          this.localIndividual = values[0];
+          this.establishmentIds = values[2];
+          console.log("individuals : " + this.localIndividual);
+          console.log("establishments : " + this.establishmentIds);
+          values[1].forEach((logs) => {
+            let userDetails = this.localIndividual.get(logs.individualId);
+            if(userDetails != null && this.establishmentIds.includes(logs.establishmentId)){
+              let logTime = new Date(logs.createdAt);
+              
+              this.addDatatoTable(userDetails, logs, logTime);
+            }
+          })
+        })
+        .catch(error => {
+          console.log(error);
+        })
   }
 }
 </script>
 
 <style>
+  .table-cell-content.fill-width {
+    white-space: normal !important;
+  }
   .title{
     font: normal normal normal 30px/40px Montserrat;
     letter-spacing: 0px;
