@@ -1,15 +1,15 @@
 <template>
     <div class="maincontent h-100">
       <Header/>
-      <div class="bodycontainer"> 
+      <div class="bodycontainer">
           <h2 class="title"> Establishment Logs </h2>
           <center>
             <div class="datatable">
-              <date-picker 
-                v-model="daterange" 
-                type="date" 
-                range 
-                placeholder="Select date range" 
+              <date-picker
+                v-model="daterange"
+                type="date"
+                range
+                placeholder="Select date range"
                 format="YYYY-MM-DD"
                 width="200"></date-picker>
               <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
@@ -51,10 +51,10 @@ export default {
         pageSizes: [5, 10, 20],
         pagination: true,
         columnWidth: [
-          {column: 0, width: '7%'}, 
-          {column: 1, width: '18%'}, 
-          {column: 2, width: '35%'}, 
-          {column: 3, width: '10%'}, 
+          {column: 0, width: '7%'},
+          {column: 1, width: '18%'},
+          {column: 2, width: '35%'},
+          {column: 3, width: '10%'},
           {column: 4, width: '15%'},
           {column: 5, width: '15%'},
         ],
@@ -87,22 +87,22 @@ export default {
         })
     }
   },
-  methods : {   
+  methods : {
     fetchAllAccessLogs : function () {
-      return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , { 
-        headers : { 
+      return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , {
+        headers : {
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
-        } 
+        }
       })
       .then(response => response.data.data);
     },
 
     fetchAllIndividuals : function (){
       let namesiddata = new Map();
-      this.$http.get(process.env.API_URL +'api/users?role=individual', { 
-        headers : { 
+      this.$http.get(process.env.API_URL +'api/users?role=individual', {
+        headers : {
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
-        } 
+        }
       })
       .then(response => {
         response.data.data.forEach((user) => {
@@ -121,10 +121,10 @@ export default {
 
     fetchAllEstablishment : function (){
       let establishmentId = [];
-      this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+this.$session.get('email'), { 
-        headers : { 
+      this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+this.$session.get('email'), {
+        headers : {
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
-        } 
+        }
       })
       .then(response => {
         response.data.data.forEach((user) => {
@@ -145,9 +145,9 @@ export default {
       logTime = logTime.slice(0, idx-1);
       this.params.data.push([
         userId,
-        userNameArray.join(" "), 
+        userNameArray.join(" "),
         userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
-        logs.accessType.toUpperCase(), 
+        logs.accessType.toUpperCase(),
         logs.designatedArea,
         logTime
       ]);
@@ -169,7 +169,7 @@ export default {
             let userDetails = this.localIndividual.get(logs.individualId);
             if(userDetails != null && this.establishmentIds.includes(logs.establishmentId)){
               let logTime = new Date(logs.createdAt);
-              
+
               this.addDatatoTable(userDetails, logs, logTime);
             }
           })
@@ -184,6 +184,7 @@ export default {
 <style>
   .table-cell-content.fill-width {
     white-space: normal !important;
+    text-transform: capitalize;
   }
   .title{
     font: normal normal normal 30px/40px Montserrat;
