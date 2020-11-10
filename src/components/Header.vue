@@ -39,14 +39,7 @@ export default {
     }
   },
   created (){
-    this.$http
-        .get(process.env.API_URL +'api/files/'+this.$session.get('profileurl'))
-        .then(response => {
-            this.profileimg = response;
-        })
-        .catch(error => {
-            console.log("file not found"); 
-        })
+    this.profileimg = process.env.API_URL +'api/files/' + this.$session.get('profileurl');
   }
 }
 </script>
