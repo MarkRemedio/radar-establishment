@@ -184,6 +184,7 @@ export default {
 <style>
   .table-cell-content.fill-width {
     white-space: normal !important;
+    text-transform: capitalize;
   }
   .title{
     font: normal normal normal 30px/40px Montserrat;
