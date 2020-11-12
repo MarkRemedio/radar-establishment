@@ -120,17 +120,20 @@ export default {
     },
 
     fetchAllEstablishment : function (){
-      let establishmentId = [];
-      this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+this.$session.get('email'), {
-        headers : {
-          'Authorization': `Bearer `+ localStorage.getItem('access_token')
-        }
-      })
-      .then(response => {
-        response.data.data.forEach((user) => {
-          establishmentId.push(user._id);
+      let establishmentId = [this.$session.get('id')];
+      let userEmail = this.$session.get('email');
+      if(userEmail != null){
+        this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+userEmail, {
+          headers : {
+            'Authorization': `Bearer `+ localStorage.getItem('access_token')
+          }
+        })
+        .then(response => {
+          response.data.data.forEach((user) => {
+            establishmentId.push(user._id);
+          });
         });
-      });
+      }
 
       return establishmentId;
     },
