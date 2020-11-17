@@ -19,7 +19,6 @@
                             placeholder="Number"
                             class="loginform"
                             type="tel"
-                            pattern="[9]{1}[0-9]{9}"
                         ></b-form-input> 
                         <br/><br/>
                         <b-form-input
