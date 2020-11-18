@@ -89,7 +89,7 @@ export default {
   },
   methods : {
     fetchAllAccessLogs : function () {
-      return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+this.$session.get('id') , {
+      return this.$http.get(process.env.API_URL +'api/access-logs?establishmentId='+localStorage.getItem('id') , {
         headers : {
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
         }
@@ -98,13 +98,14 @@ export default {
     },
 
     fetchAllIndividuals : function (){
-      let namesiddata = new Map();
-      this.$http.get(process.env.API_URL +'api/users?role=individual', {
+      return this.$http.get(process.env.API_URL +'api/users?role=individual', {
         headers : {
           'Authorization': `Bearer `+ localStorage.getItem('access_token')
         }
       })
       .then(response => {
+        console.log(response);
+        let namesiddata = new Map();
         response.data.data.forEach((user) => {
           namesiddata.set(user._id,[
               user.firstName,
@@ -114,14 +115,13 @@ export default {
               user.address
             ]);
         });
-      });
-
-      return namesiddata;
+        return namesiddata;
+      })
     },
 
     fetchAllEstablishment : function (){
-      let establishmentId = [this.$session.get('id')];
-      let userEmail = this.$session.get('email');
+      var establishmentId = [localStorage.getItem('id')];
+      let userEmail = localStorage.getItem('email');
       if(userEmail != null){
         this.$http.get(process.env.API_URL +'api/users?role=establishment&email='+userEmail, {
           headers : {
@@ -134,7 +134,6 @@ export default {
           });
         });
       }
-
       return establishmentId;
     },
 

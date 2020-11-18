@@ -80,11 +80,10 @@ export default {
                     if(response.data.data.user.role === 'establishment'){
                         const token = response.data.data.token;
                         localStorage.setItem('access_token', token);
-                        this.$session.start();
-                        this.$session.set('name', response.data.data.user.firstName);
-                        this.$session.set('id', response.data.data.user._id);
-                        this.$session.set('profileurl', response.data.data.user.profileImageFileId);
-                        this.$session.set('email', response.data.data.user.email);
+                        localStorage.setItem('name', response.data.data.user.firstName);
+                        localStorage.setItem('id', response.data.data.user._id);
+                        localStorage.setItem('profileurl', response.data.data.user.profileImageFileId);
+                        localStorage.setItem('email', response.data.data.user.email);
                         this.$router.push({ name : 'establishment' });
                     }else{
                         this.displayerrormsg = 'block';
