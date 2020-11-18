@@ -27,19 +27,18 @@ export default {
   name: 'app',
   data () {
     return {
-      name: this.$session.get('name'),
+      name: localStorage.getItem('name'),
       profileimg: defaultProfileImg,
     }
   },
   methods : {   
     logout() {
-      localStorage.removeItem('access_token');
-      this.$session.destroy();
+      localStorage.clear();
       this.$router.push({ name : 'login' });
     }
   },
   created (){
-    this.profileimg = process.env.API_URL +'api/files/' + this.$session.get('profileurl');
+    this.profileimg = process.env.API_URL +'api/files/' + localStorage.getItem('profileurl');
   }
 }
 </script>
