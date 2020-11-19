@@ -13,6 +13,10 @@
                 format="YYYY-MM-DD"
                 width="200"></date-picker>
               <vue-table-dynamic :params="params" ref="table"></vue-table-dynamic>
+              <b-button 
+                v-on:click="downloadTocsv"
+                class="downloadbtn" 
+                v-bind:style="{ display : displaydownloadbtn}">Download</b-button>
             </div>
           </center>
       </div>
@@ -36,6 +40,7 @@ export default {
   },
   data(){
     return {
+      displaydownloadbtn: 'none',
       daterange: '',
       localIndividual: [],
       establishmentIds: [],
@@ -153,6 +158,40 @@ export default {
         logs.designatedArea,
         logTime
       ]);
+
+      if(this.params.data.length > 1) this.displaydownloadbtn = 'block';
+    },
+
+    downloadTocsv: function(){
+      var csvContent = '';
+      this.params.data.forEach((infoArray, index) => {
+        var dataString = infoArray.join(',');
+        csvContent += index < this.params.data.length ? dataString + '\n' : dataString;
+      });
+
+      var download = function(content, fileName, mimeType) {
+        var a = document.createElement('a');
+        mimeType = mimeType || 'application/octet-stream';
+
+        if (navigator.msSaveBlob) { // IE10
+          navigator.msSaveBlob(new Blob([content], {
+            type: mimeType
+          }), fileName);
+        } else if (URL && 'download' in a) { //html5 A[download]
+          a.href = URL.createObjectURL(new Blob([content], {
+            type: mimeType
+          }));
+          a.setAttribute('download', fileName);
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        } else {
+          location.href = 'data:application/octet-stream,' + encodeURIComponent(content); // only this mime type is supported
+        }
+      }
+
+      var csvFileName = 'radar-logs-history.csv'
+      download(csvContent, csvFileName, 'text/csv;encoding:utf-8');
     }
 
   },
@@ -252,6 +291,7 @@ export default {
   }
   .pagination-page.flex-c {
     margin:auto;
+    height: 35px;
   }
   .row {
     margin-right: 0px;
@@ -268,6 +308,16 @@ export default {
     box-shadow: 0 0 10px #0000002B;
     border-radius: 20px;
     opacity: 1;
+  }
+  button.btn.downloadbtn.btn-secondary {
+    float: right;
+    margin-top: -40px;
+    height: 35px;
+  }
+  .pagination-size.flex-c-b,
+  span.page-item.flex-c-c,
+  span.page-item.page-forward.flex-c-c.is-disabled {
+    height: 35px;
   }
 </style>
 
