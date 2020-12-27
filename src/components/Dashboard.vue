@@ -46,7 +46,7 @@ export default {
       establishmentIds: [],
       params: {
         data: [
-          ['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']
+          ['ID', 'Name', 'Address', 'Contant No', 'In/Out', 'Designated Area', 'Time Logged']
         ],
         header: 'row',
         highlight: { row: [0] },
@@ -58,10 +58,11 @@ export default {
         columnWidth: [
           {column: 0, width: '7%'},
           {column: 1, width: '18%'},
-          {column: 2, width: '35%'},
-          {column: 3, width: '10%'},
-          {column: 4, width: '15%'},
-          {column: 5, width: '15%'},
+          {column: 2, width: '30%'},
+          {column: 3, width: '11%'},
+          {column: 4, width: '9%'},
+          {column: 5, width: '9%'},
+          {column: 6, width: '15%'},
         ],
       },
     }
@@ -72,7 +73,7 @@ export default {
           this.fetchAllAccessLogs(),
         ])
         .then((values) => {
-          this.params.data = [['ID', 'Name', 'Address', 'In/Out', 'Designated Area', 'Time Logged']];
+          this.params.data = [['ID', 'Name', 'Address', 'Contant No', 'In/Out', 'Designated Area', 'Time Logged']];
           values[0].forEach((logs) => {
             let userDetails = this.localIndividual.get(logs.individualId);
             if(userDetails != null && this.establishmentIds.includes(logs.establishmentId)){
@@ -117,7 +118,8 @@ export default {
               user.middleName,
               user.lastName,
               user.displayId,
-              user.address
+              user.address,
+              user.contactNumber,
             ]);
         });
         return namesiddata;
@@ -154,6 +156,7 @@ export default {
         userId,
         userNameArray.join(" "),
         userAddress.brgyName + " " + userAddress.citymunName + " " + userAddress.provName,
+        userDetails[5],
         logs.accessType.toUpperCase(),
         logs.designatedArea,
         logTime
@@ -204,8 +207,6 @@ export default {
         .then((values) => {
           this.localIndividual = values[0];
           this.establishmentIds = values[2];
-          console.log("individuals : " + this.localIndividual);
-          console.log("establishments : " + this.establishmentIds);
           values[1].forEach((logs) => {
             let userDetails = this.localIndividual.get(logs.individualId);
             if(userDetails != null && this.establishmentIds.includes(logs.establishmentId)){
